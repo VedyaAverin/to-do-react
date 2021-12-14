@@ -1,49 +1,67 @@
 import React, {useContext} from "react";
 import PropTypes from "prop-types"
 import Context from "../context";
+import {IconButton, Checkbox, makeStyles, Typography, List, Container} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const styles = {
+const useStyles = makeStyles((theme) => ({
     li: {
+        width: '100%',
+        maxWidth: 460 + "px",
         display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '.5rem 1rem',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        marginBottom: '.5rem'
+        padding: 0
     },
-    input: {
-        marginRight: '1rem',
-        cursor: 'pointer'
+    item: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        paddingLeft: 0
+    },
+    pf: {
+        paddingLeft: 0
+    },
+    done: {
+        textDecoration: 'line-through'
     }
-}
+}))
 
 
 function TodoItem({todo, index, onChange}) {
     const {removeTodo} = useContext(Context)
     const classes = []
+    const classesItem = useStyles();
 
     if(todo.completed) {
-        classes.push('done')
+        classes.push(classesItem.done)
     }
+    
+
 
     return (
-        <li style={styles.li}>
-            <span className={classes.join(' ')}>
-                <input 
-                type='checkbox' 
-                checked={todo.completed}
-                style={styles.input} 
-                onChange={() => onChange(todo.id)}>
-                </input>
-                <strong>{index + 1}</strong>
-                &nbsp;
-                {todo.title}
-            </span>
-            <button className='rm' onClick={removeTodo.bind(null, todo.id)}>
-                &times;
-            </button>
-        </li>
+        <List className = {classesItem.li} >
+            <Container className={classesItem.item}>
+                <Container className={classesItem.pf}>
+                    <Checkbox
+                        color = 'primary'
+                        inputProps={{ 'aria-label': 'uncontrolled-checkbox'}} 
+                        checked={todo.completed}
+                        onChange={() => onChange(todo.id)}
+                    />
+                    <Typography variant="caption" className={classes}>
+                        <strong>{index + 1}</strong>
+                        &nbsp;
+                        {todo.title}
+                    </Typography>
+                </Container>
+            <IconButton 
+                color = 'secondary'
+                onClick={removeTodo.bind(null, todo.id)}
+                aria-label="delete"
+            >
+            <DeleteIcon />
+            </IconButton>
+            </Container>
+        </List>
     )
 }
 
